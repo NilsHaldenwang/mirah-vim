@@ -202,8 +202,8 @@ if !exists("mirah_no_special_methods")
   syn match   mirahControl   "\<\%(exit!\|\%(abort\|at_exit\|exit\|fork\|loop\|trap\)\>\)"
   syn keyword mirahEval	    eval class_eval instance_eval module_eval
   syn keyword mirahException raise fail catch throw
-  syn keyword mirahInclude   autoload extend include load require
-  syn keyword mirahKeyword   callcc caller lambda proc
+  syn keyword mirahInclude   autoload extend include load require import
+  syn keyword mirahKeyword   callcc caller lambda proc implements
 endif
 
 " Comments and Documentation
