@@ -1,10 +1,9 @@
 " Vim indent file
 " Language:		Mirah
-" Maintainer:		
+" Maintainer:	  James Britt - james@neurogami.com	
 " Info:			
 " URL:			
-" Anon CVS:		
-" Release Coordinator:	
+" Release Coordinator: Jimbabwe!	
 
 " 0. Initialization {{{1
 " =================
@@ -18,12 +17,12 @@ let b:did_indent = 1
 setlocal nosmartindent
 
 " Now, set up our indentation expression and keys that trigger it.
-setlocal indentexpr=GetRubyIndent()
+setlocal indentexpr=GetMirahIndent()
 setlocal indentkeys=0{,0},0),0],!^F,o,O,e
 setlocal indentkeys+==end,=elsif,=when,=ensure,=rescue,==begin,==end
 
 " Only define the function once.
-if exists("*GetRubyIndent")
+if exists("*GetMirahIndent")
   finish
 endif
 
@@ -34,30 +33,30 @@ set cpo&vim
 " ============
 
 " Regex of syntax group names that are or delimit string or are comments.
-let s:syng_strcom = '\<ruby\%(String\|StringDelimiter\|ASCIICode' .
+let s:syng_strcom = '\<mirah\%(String\|StringDelimiter\|ASCIICode' .
       \ '\|Interpolation\|NoInterpolation\|Escape\|Comment\|Documentation\)\>'
 
 " Regex of syntax group names that are strings.
 let s:syng_string =
-      \ '\<ruby\%(String\|StringDelimiter\|Interpolation\|NoInterpolation\|Escape\)\>'
+      \ '\<mirah\%(String\|StringDelimiter\|Interpolation\|NoInterpolation\|Escape\)\>'
 
 " Regex of syntax group names that are strings or documentation.
 let s:syng_stringdoc =
-  \'\<ruby\%(String\|StringDelimiter\|Interpolation\|NoInterpolation\|Escape\|Documentation\)\>'
+  \'\<mirah\%(String\|StringDelimiter\|Interpolation\|NoInterpolation\|Escape\|Documentation\)\>'
 
 " Expression used to check whether we should skip a match with searchpair().
 let s:skip_expr =
       \ "synIDattr(synID(line('.'),col('.'),0),'name') =~ '".s:syng_strcom."'"
 
 " Regex used for words that, at the start of a line, add a level of indent.
-let s:ruby_indent_keywords = '^\s*\zs\<\%(module\|class\|def\|if\|for' .
+let s:mirah_indent_keywords = '^\s*\zs\<\%(module\|class\|def\|if\|for' .
       \ '\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure' .
       \ '\|rescue\)\>' .
       \ '\|\%([*+/,=:-]\|<<\|>>\)\s*\zs' .
       \    '\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>'
 
 " Regex used for words that, at the start of a line, remove a level of indent.
-let s:ruby_deindent_keywords =
+let s:mirah_deindent_keywords =
       \ '^\s*\zs\<\%(ensure\|else\|rescue\|elsif\|when\|end\)\>'
 
 " Regex that defines the start-match for the 'end' keyword.
@@ -192,10 +191,10 @@ function s:MatchLast(lnum, regex)
   return col + 1
 endfunction
 
-" 3. GetRubyIndent Function {{{1
+" 3. GetMirahIndent Function {{{1
 " =========================
 
-function GetRubyIndent()
+function GetMirahIndent()
   " 3.1. Setup {{{2
   " ----------
 
@@ -229,7 +228,7 @@ function GetRubyIndent()
 
   " If we have a deindenting keyword, find its match and indent to its level.
   " TODO: this is messy
-  if s:Match(v:lnum, s:ruby_deindent_keywords)
+  if s:Match(v:lnum, s:mirah_deindent_keywords)
     call cursor(v:lnum, 1)
     if searchpair(s:end_start_regex, s:end_middle_regex, s:end_end_regex, 'bW',
 	    \ s:end_skip_expr) > 0
@@ -299,7 +298,7 @@ function GetRubyIndent()
     endif
   end
 
-  let col = s:Match(lnum, s:ruby_indent_keywords)
+  let col = s:Match(lnum, s:mirah_indent_keywords)
   if col > 0
     call cursor(lnum, col)
     let ind = virtcol('.') - 1 + &sw
@@ -335,7 +334,7 @@ function GetRubyIndent()
   " If the MSL line had an indenting keyword in it, add a level of indent.
   " TODO: this does not take into account contrived things such as
   " module Foo; class Bar; end
-  if s:Match(lnum, s:ruby_indent_keywords)
+  if s:Match(lnum, s:mirah_indent_keywords)
     let ind = msl_ind + &sw
     if s:Match(lnum, s:end_end_regex)
       let ind = ind - &sw
